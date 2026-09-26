@@ -2,9 +2,15 @@ import products from "../data/products";
 import type { Product } from "../types";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useState } from "react";
 
 function CatalogPage() {
   const { cart, setCart } = useCart();
+  const [search, setSearch] = useState('');
+
+  const filtered = products.filter(product =>
+    product.title.toLowerCase().includes(search.toLowerCase())
+  );
   
   function addToCart(product: Product) {
     const existing = cart.find((item) => item.id === product.id);
@@ -33,8 +39,14 @@ function CatalogPage() {
 
   return (
     <>
+      <input className="search-input"
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Поиск товаров..."
+    />
       <div className="catalog">
-        {products.map((product: Product) => (
+        {filtered.map((product: Product) => (
           <div key={product.id} className="product-card">
             <Link to={`/product/${product.id}`}>
               <div className="product-image-wrapper">
