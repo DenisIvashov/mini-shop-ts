@@ -1,8 +1,8 @@
 import { Outlet, Link } from "react-router-dom";
-import { useCart } from "./context/CartContext";
+import { useCartStore } from "./store/cartStore";
 
 function App() {
-  const { cart } = useCart();
+  const { cart } = useCartStore();
   const totalItem = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (

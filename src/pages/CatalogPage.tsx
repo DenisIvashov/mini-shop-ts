@@ -1,42 +1,17 @@
 import products from "../data/products";
 import type { Product } from "../types";
 import { Link } from "react-router-dom";
-import { useCart } from "../context/CartContext";
+import { useCartStore } from "../store/cartStore";
 import { useState } from "react";
 
 function CatalogPage() {
-  const { cart, setCart } = useCart();
+  const { addToCart } = useCartStore();
   const [search, setSearch] = useState('');
 
   const filtered = products.filter(product =>
     product.title.toLowerCase().includes(search.toLowerCase())
   );
   
-  function addToCart(product: Product) {
-    const existing = cart.find((item) => item.id === product.id);
-
-    if (existing) {
-      const updated = cart.map((item) =>
-        item.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item,
-      );
-      setCart(updated);
-    } else {
-      setCart([
-        ...cart,
-        {
-          id: product.id,
-          title: product.title,
-          price: product.price,
-          image: product.image,
-          description: product.description,
-          quantity: 1,
-        },
-      ]);
-    }
-  }
-
   return (
     <>
       <input className="search-input"

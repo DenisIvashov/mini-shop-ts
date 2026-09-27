@@ -1,31 +1,14 @@
-import { useCart } from "../context/CartContext";
+import { useCartStore } from "../store/cartStore";
 import { useNavigate } from "react-router-dom";
 
 function CartPage() {
     const navigate = useNavigate();
-    const { cart, setCart } = useCart();
+    const { cart, removeFromCart, changeQuantity, clearCart} = useCartStore();
     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
     const totalFixed = total.toFixed(2);
 
-    function removeFromCart(id: number) {
-        const updated = cart.filter(item => item.id !== id);
-        setCart(updated);
-    }
-    
     if (cart.length === 0) {
         return <h2>Корзина пуста</h2>
-    }
-
-    function changeQuantity(id: number, delta: number) {
-        const updated = cart.map(item => {
-            if (item.id === id) {
-                const newQuantity = item.quantity + delta;
-                if (newQuantity < 1) return item;
-                return { ...item, quantity: newQuantity}
-            }
-            return item;
-        });
-        setCart(updated);
     }
 
     return (
@@ -44,7 +27,7 @@ function CartPage() {
             ))}
             <p>Итого: {totalFixed}</p>
             <button onClick={() => {
-                setCart([]);
+                clearCart();
                 navigate('/success')
             }}>Оформить заказ</button>
         </>
